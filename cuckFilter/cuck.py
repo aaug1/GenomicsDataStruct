@@ -41,6 +41,23 @@ class CuckooFilter:
         capped_i2 = i2 % self.m
         return f in self.buckets[capped_i1] or f in self.buckets[capped_i2]
 
+    def delete(self, input: str):
+        i1, i2, f = self.hashes(input)
+        capped_i1 = i1 % self.m
+        capped_i2 = i2 % self.m
+        # The modulo self.m is to cap the hash so it can be used as an actual index
+        for e1_index in range(len(self.buckets[capped_i1])):
+            if self.buckets[capped_i1][e1_index] == f:
+                self.buckets[capped_i1][e1_index] = None
+                return True
+
+        for e2_index in range(len(self.buckets[capped_i2])):
+            if self.buckets[capped_i2][e2_index] == f:
+                self.buckets[capped_i2][e2_index] = None
+                return True
+
+        return False
+
     def relocate(self, i1, i2, f):
         i = random.choice([i1, i2])
         for n in range(self.max_kicks):
@@ -103,6 +120,8 @@ p1 = CuckooFilter(3, 0.1)
 
 p1.insert('qojngwdf112323')
 p1.insert('somethiqweng')
+print(p1.lookup('somethiqweng'))
+p1.delete('somethiqweng')
 print(p1.lookup('somethiqweng'))
 # p1.insert('1')
 # p1.insert('2')
