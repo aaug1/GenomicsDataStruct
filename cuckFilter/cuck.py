@@ -1,5 +1,6 @@
 import hashlib
 import math
+import random
 
 # https://www.pdl.cmu.edu/PDL-FTP/FS/cuckoo-conext2014.pdf
 # https://medium.com/@meeusdylan/implementing-a-cuckoo-filter-in-go-147a5f1f7a9
@@ -9,24 +10,47 @@ class CuckooFilter:
   # n = len(items), fp = false positive rate
     def __init__(self, n: int, fp: float):
         self.b = 4  # entries per bucket
+        self.max_kicks = 200  # number of kicks to try before giving up and declaring cycle
         # How long a fingerprint in bytes
         self.f = self.fingerprintLength(self.b, fp)
         numBits = int((n / self.f) * 8)
         self.m = self.nextPower(numBits)  # buckets
-        self.buckets = [[None]*self.m for i in range(self.b)]
+        self.buckets = [[None]*self.b for i in range(self.m)]
         self.n = n  # filter capacity (rename cap?)
 
     def insert(self, input: str):
         i1, i2, f = self.hashes(input)
+        capped_i1 = i1 % self.m
+        capped_i2 = i2 % self.m
         # The modulo self.m is to cap the hash so it can be used as an actual index
-        if self.buckets[i1 % self.m] is None:
-            self.buckets[i1 % self.m] = f
-            return
-        if self.buckets[i2 % self.m] is None:
-            self.buckets[i2 % self.m] = f
-            return
+        for e1_index in range(len(self.buckets[capped_i1])):
+            if self.buckets[capped_i1][e1_index] is None:
+                self.buckets[capped_i1][e1_index] = f
+                return
 
-        '''I need to kick stuff out and check cycles if too many'''
+        for e2_index in range(len(self.buckets[capped_i2])):
+            if self.buckets[capped_i2][e2_index] is None:
+                self.buckets[capped_i2][e2_index] = f
+                return
+        # reached here means both places were full so must relocate existing items
+        self.relocate(i1, i2, f)
+
+    def relocate(self, i1, i2, f):
+        i = random.choice([i1, i2])
+        for n in range(self.max_kicks):
+            bucket_index = i % self.m
+            # randomly select an entry e from bucket[i];
+            entry_index = random.randrange(self.b)
+            kicked_f = self.buckets[bucket_index][entry_index]
+            self.buckets[bucket_index][entry_index] = f
+            hash_f = int.from_bytes(self.sha_hash(kicked_f), "big")
+            i = i ^ hash_f
+            capped_i = i % self.m
+            for entry_i in range(len(self.buckets[capped_i])):
+                if self.buckets[capped_i][entry_i] is None:
+                    self.buckets[capped_i][entry_i] = kicked_f
+                    return
+        raise Exception("Failue: Hashtable is full")
 
     def hashes(self, val: str):
         h = self.sha_hash(bytes(val, 'utf-8'))
@@ -72,5 +96,6 @@ class CuckooFilter:
 p1 = CuckooFilter(3, 0.1)
 
 p1.insert('somethiqweng')
-
-# print(len(p1.buckets[0]))
+# p1.insert('1')
+# p1.insert('2')
+print(p1.buckets)
