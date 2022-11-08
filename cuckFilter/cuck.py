@@ -35,6 +35,12 @@ class CuckooFilter:
         # reached here means both places were full so must relocate existing items
         self.relocate(i1, i2, f)
 
+    def lookup(self, input: str):
+        i1, i2, f = self.hashes(input)
+        capped_i1 = i1 % self.m
+        capped_i2 = i2 % self.m
+        return f in self.buckets[capped_i1] or f in self.buckets[capped_i2]
+
     def relocate(self, i1, i2, f):
         i = random.choice([i1, i2])
         for n in range(self.max_kicks):
@@ -95,7 +101,9 @@ class CuckooFilter:
 
 p1 = CuckooFilter(3, 0.1)
 
+p1.insert('qojngwdf112323')
 p1.insert('somethiqweng')
+print(p1.lookup('somethiqweng'))
 # p1.insert('1')
 # p1.insert('2')
-print(p1.buckets)
+# print(p1.buckets)
