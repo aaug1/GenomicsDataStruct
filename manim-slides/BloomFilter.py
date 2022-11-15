@@ -97,6 +97,16 @@ class BloomFilter:
 
         print(f"Key {key} probably exists in the database")
         return 1
+      
+    def check_return_indices(self, key):
+        """Determines if key is probably in bloom filter or not, returning mapped indices"""
+        indices = []
+        for i in range(self.num_hash):
+            hash = self.hash_functions[i]
+            index = self.hashStr(key, hash)
+            indices.append(index)
+
+        return indices
 
     def is_false_positive(self, key):
         """checks if a key is a false positive or not"""
@@ -116,31 +126,3 @@ class BloomFilter:
             return 1
 
 
-# Initialize the bloom filter
-x = BloomFilter()
-
-# Store sequence of keys
-x.store("a")
-x.store("b")
-x.store("c")
-
-print(x)
-# Check those keys probably exist
-x.check("a")
-x.check("b")
-x.check("c")
-
-# Check for keys that likely do not exist
-x.check("d")
-x.check("e")
-x.check("f")
-
-# Check those keys probably exist
-x.is_false_positive("a")
-x.is_false_positive("b")
-x.is_false_positive("c")
-
-# Check for keys that likely do not exist
-x.is_false_positive("d")
-x.is_false_positive("e")
-x.is_false_positive("f")
