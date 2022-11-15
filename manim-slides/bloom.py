@@ -3,15 +3,10 @@ from manim import *
 from manim_slides import Slide
 from manim.mobject.types.vectorized_mobject import VGroup, VMobject
 import random
+from BloomFilter import BloomFilter
 
 
 class Bloom(Slide):
-    box_size = 0.8
-    # def __init__(self, *args: Any, output_folder: str = ..., **kwargs: Any) -> None:
-    #     super().__init__(*args, output_folder=output_folder, **kwargs)
-    #     self.box_size = 0.8
-    #     self.array_len = 10
-    #     self.num_hash = 3
 
     def construct(self):
         # Add a plane for visualization
@@ -22,6 +17,10 @@ class Bloom(Slide):
         # })
         # self.add(plane)
         ## Params
+        # Initialize BloomFilter
+        bloomFilter = BloomFilter()
+
+
         box_size = 0.8
         array_len = 15
         num_hash = 5
