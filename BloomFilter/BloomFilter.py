@@ -1,7 +1,7 @@
 import hashlib
 import numpy as np
 import random
-
+import math
 
 def is_prime(n):
     if n == 2 or n == 3:
@@ -43,8 +43,7 @@ class BloomFilter:
         for i in range(self.num_hash):
             a = random.randint(1, primes[i])
             b = random.randint(0, primes[i])
-            c = random.randint(1, primes[i])
-            self.hash_functions.append((a, b, c, primes[i]))
+            self.hash_functions.append((a, b, primes[i]))
 
     def setHashFunctions(self, hash_functions):
         """Sets custom hash functiosn following form (a, b, c, d)"""
@@ -58,15 +57,19 @@ class BloomFilter:
         if not isinstance(str_to_hash, str):
             str_to_hash = str(str_to_hash)
 
-        a, b, c, p = hash_fun
-        str_to_hash = "1" + str_to_hash
-        l = len(str_to_hash) - 1
-
-        int_to_hash = 0
-        for i in range(l+1):
-            int_to_hash += ord(str_to_hash[i]) * (c ** (l-i))
-        int_to_hash = int_to_hash % p
+        a, b, p = hash_fun
+        int_to_hash = self.convert_to_int(str_to_hash)
+        # for i in range(l+1):
+        #     int_to_hash += ord(str_to_hash[i]) * (c ** (l-i))
+        # int_to_hash = int_to_hash % p
         return ((a * int_to_hash + b) % p) % self.size
+
+    def convert_to_int(self, seq):
+        converted = []
+        arr = ["A", "C", "G", "T"]
+        for c in seq:
+            converted.append(str(arr.index(c)))
+        return int(''.join(converted), 4)
 
     def store(self, key):
         """Stores a key in bloom filter"""
@@ -105,32 +108,46 @@ class BloomFilter:
             print(f"Key {key} was not found in true data. False positive.")
             return 1
 
+def get_size_numhash(n, p):
+    size = math.ceil(-1 * n * np.log(p) / (np.log(2) ** 2)) # -n*ln(p) / (ln(2)^2)
+    num = math.ceil(size * np.log(2) / n) # m/n * ln(2)
+    return num, size
 
 # Initialize the bloom filter
-x = BloomFilter()
+num, size = get_size_numhash(8, .25)
+
+x = BloomFilter(num, size)
+
+print(size, num)
 
 # Store sequence of keys
-x.store("a")
-x.store("b")
-x.store("c")
+x.store("AA")
+x.store("AC")
+x.store("AG")
+x.store("AT")
+x.store("CA")
+x.store("CC")
+x.store("CG")
+x.store("CT")
 
-print(x)
-# Check those keys probably exist
-x.check("a")
-x.check("b")
-x.check("c")
+# # Check those keys probably exist
+print('Check presence for those in')
+x.check("AA")
+x.check("AC")
+x.check("AG")
+x.check("AT")
+x.check("CA")
+x.check("CC")
+x.check("CG")
+x.check("CT")
 
-# Check for keys that likely do not exist
-x.check("d")
-x.check("e")
-x.check("f")
-
-# Check those keys probably exist
-x.is_false_positive("a")
-x.is_false_positive("b")
-x.is_false_positive("c")
-
-# Check for keys that likely do not exist
-x.is_false_positive("d")
-x.is_false_positive("e")
-x.is_false_positive("f")
+# # Check for keys that likely do not exist
+print('Check presence for those not in')
+x.check("GA")
+x.check("GC")
+x.check("GG")
+x.check("TT")
+x.check("TA")
+x.check("TC")
+x.check("TG")
+x.check("TT")
