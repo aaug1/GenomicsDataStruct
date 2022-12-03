@@ -1,4 +1,4 @@
-from manim import Scene, Write, Text, FadeIn, FadeOut, ImageMobject, UP, DOWN, LEFT, RIGHT, Ellipse, Rectangle, Group, VGroup, DrawBorderThenFill, BLUE_D, BLUE_B, BLUE, ORANGE
+from manim import MathTex, Scene, Write, Text, FadeIn, FadeOut, ImageMobject, UP, DOWN, LEFT, RIGHT, Ellipse, Rectangle, Arrow, ArrowSquareTip, Group, VGroup, Circumscribe, DrawBorderThenFill, BLUE_D, BLUE_B, BLUE, ORANGE, DARK_GRAY, LIGHT_GRAY, WHITE, VMobject, Square
 
 
 class CuckooFilter(Scene):
@@ -6,6 +6,7 @@ class CuckooFilter(Scene):
         self.WriteQuestion()
         self.PoseMotivation()
         self.ListGoals()
+        self.MakeDataStructure()
 
     def WriteQuestion(self):
         text = Text("What is a 🐔 filter?", font_size=100)
@@ -50,6 +51,7 @@ class CuckooFilter(Scene):
         bloom_filter.add(bloom, bloom_pic).scale(.5).shift(DOWN)
         self.play(FadeIn(bloom_filter))
         self.play(bloom_filter.animate.shift(3.3*UP).shift(4*RIGHT))
+        self.play(Circumscribe(g_3))
 
         kirby = ImageMobject("images/8-bit-kirby.png").shift(2.4*DOWN)
         cherry_text = Text("I STILL hate cherries", font_size=30)
@@ -61,3 +63,57 @@ class CuckooFilter(Scene):
         self.play(FadeIn(kirby_speech_bubble))
 
         self.play(FadeOut(Group(*self.mobjects)))
+
+    def MakeDataStructure(self):
+
+        middle_group = VGroup()
+        middle_group2 = VGroup()
+        # As max_stroke_width_to_length_ratio gets bigger,
+        # the width of stroke increases.
+        for i in range(0, 8, 1):
+            middle_group += Arrow(max_stroke_width_to_length_ratio=5).shift(i*.8 * DOWN)
+            middle_group2 += Arrow(max_stroke_width_to_length_ratio=5).shift(i*.8 * DOWN)
+
+        numEntries = 3
+        cuckooFilter = Group()
+        for i in range(numEntries):
+            cuckooFilter.add(Vert_Array(8, 0.8, fill_color=DARK_GRAY,
+                                        color=LIGHT_GRAY, indices=True).shift(2.2*i*RIGHT))
+        self.play(FadeIn(cuckooFilter.shift(2*RIGHT)))
+        self.play(FadeIn(middle_group.shift(2.8*UP).shift(3*RIGHT)))
+        self.play(FadeIn(middle_group2.shift(2.8*UP).shift(5.3*RIGHT)))
+
+        self.hashCherry()
+
+    def hashCherry(self):
+        cherry = ImageMobject(
+            "images/8-bit-cherry.png").scale(.4).shift(5*LEFT)
+        self.play(FadeIn(cherry))
+
+        all_hash = VGroup()
+        for i in range(2):
+            mathText = MathTex(f"h{i}")
+            mathText.shift(RIGHT*(i-2//2) + UP*2)
+            all_hash.add(mathText)
+        self.play(FadeIn(all_hash))
+
+
+class Vert_Array(VMobject):
+    def __init__(self, array_len, box_size, color=WHITE, indices=False, **kwargs):
+        # Set properties
+        self.array_len = array_len
+        self.box_size = box_size
+        self.squares = []
+        self.nums = []
+        VMobject.__init__(self, **kwargs)
+        square = Square(side_length=box_size, color=color)
+
+        # Create the squares in array
+        for i in range(array_len):
+            square1 = Square(side_length=box_size, color=color).next_to(
+                square, DOWN, buff=0).set_style(fill_color=DARK_GRAY, fill_opacity=1)
+            square = square1
+            self.add(square)
+            self.squares.append(square)
+
+        self.center()
