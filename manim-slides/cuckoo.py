@@ -1,4 +1,4 @@
-from manim import MathTex, Scene, Write, Text, FadeIn, FadeOut, ImageMobject, UP, DOWN, LEFT, RIGHT, UL, UR, DL, DR, Ellipse, Rectangle, Circle, Arrow, GrowArrow, ArrowSquareTip, Group, VGroup, Circumscribe, DrawBorderThenFill, BLUE_D, BLUE_B, BLUE, ORANGE, DARK_GRAY, LIGHT_GRAY, WHITE, VMobject, Square
+from manim import MathTex, Scene, Write, Text, FadeIn, FadeOut, ImageMobject, UP, DOWN, LEFT, RIGHT, UL, UR, DL, DR, Ellipse, Rectangle, Circle, Line, Arrow, GrowArrow, ArrowSquareTip, Group, VGroup, Circumscribe, DrawBorderThenFill, BLUE_D, BLUE_B, BLUE, ORANGE, DARK_GRAY, LIGHT_GRAY, WHITE, VMobject, Square
 
 
 class CuckooFilter(Scene):
@@ -7,7 +7,8 @@ class CuckooFilter(Scene):
         # self.PoseMotivation()
         # self.ListGoals()
         # self.MakeDataStructure()
-        self.ExplainFinger()
+        # self.ExplainFinger()
+        self.ExplainHashes()
 
     def WriteQuestion(self):
         text = Text("What is a 🐔 filter?", font_size=100)
@@ -215,6 +216,31 @@ class CuckooFilter(Scene):
         self.play(FadeIn(fingerprint_bits.scale(.2).shift(7.2*RIGHT + .2*UP)))
 
         self.play(FadeOut(Group(*self.mobjects)))
+
+    def ExplainHashes(self):
+        h1 = MathTex("h1( ) = hash(input object)").shift(4*LEFT+3*UP)
+        h2 = MathTex("h0( ) = h0( ) \oplus hash(fingerprint)").shift(
+            3.2*LEFT+2*UP)
+        self.play(FadeIn(h1))
+        self.play(FadeIn(h2))
+
+        h1_val = MathTex("h1( ) = 11010").shift(5.4*LEFT+1*UP)
+        hf_val = MathTex("hash(fingerprint) = 10011").shift(3.8*LEFT)
+        self.play(FadeIn(h1_val))
+        self.play(FadeIn(hf_val))
+
+        bit_one = MathTex("11010").shift(5*RIGHT+3*UP)
+        bit_two = MathTex("10011").shift(5*RIGHT+2.5*UP)
+        bit_three = MathTex("01001").shift(5*RIGHT+1.5*UP)
+        self.play(FadeIn(bit_one))
+        self.play(FadeIn(bit_two))
+
+        l = Line((0, 0, 0), (2, 0, 0)).shift(2*UP + 4*RIGHT)
+        self.play(FadeIn(l))
+        self.play(Write(bit_three))
+
+        h2_val = MathTex("h0( ) = 01001").shift(5.4*LEFT + DOWN)
+        self.play(FadeIn(h2_val))
 
 
 class Vert_Array(VMobject):
