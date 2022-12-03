@@ -3,10 +3,11 @@ from manim import MathTex, Scene, Write, Text, FadeIn, FadeOut, ImageMobject, UP
 
 class CuckooFilter(Scene):
     def construct(self):
-        #self.WriteQuestion()
-        #self.PoseMotivation()
-        #self.ListGoals()
-        self.MakeDataStructure()
+        # self.WriteQuestion()
+        # self.PoseMotivation()
+        # self.ListGoals()
+        # self.MakeDataStructure()
+        self.ExplainFinger()
 
     def WriteQuestion(self):
         text = Text("What is a 🐔 filter?", font_size=100)
@@ -64,15 +65,11 @@ class CuckooFilter(Scene):
 
         self.play(FadeOut(Group(*self.mobjects)))
 
-    def MakeDataStructure(self):
+    def MakeDataStructure(self, play_cherry=True):
 
         middle_group = VGroup()
-        #middle_group2 = VGroup()
-        # As max_stroke_width_to_length_ratio gets bigger,
-        # the width of stroke increases.
         for i in range(0, 8, 1):
             middle_group += Arrow(max_stroke_width_to_length_ratio=5).shift(i*.8 * DOWN)
-            #middle_group2 += Arrow(max_stroke_width_to_length_ratio=5).shift(i*.8 * DOWN)
 
         numEntries = 2
         cuckooFilter = Group()
@@ -81,9 +78,10 @@ class CuckooFilter(Scene):
                                         color=LIGHT_GRAY, indices=True).shift(2.2*i*RIGHT))
         self.play(FadeIn(cuckooFilter.shift(2*RIGHT)))
         self.play(FadeIn(middle_group.shift(2.8*UP).shift(3*RIGHT)))
-        #self.play(FadeIn(middle_group2.shift(2.8*UP).shift(5.3*RIGHT)))
 
-        self.hashCherry()
+        if play_cherry:
+            self.hashCherry()
+            self.play(FadeOut(Group(*self.mobjects)))
 
     def hashCherry(self):
         cherry = ImageMobject(
@@ -91,32 +89,25 @@ class CuckooFilter(Scene):
         self.play(FadeIn(cherry.shift(.5*UP)))
 
         self.play(Circumscribe(cherry, shape=Circle))
-        #self.play(FadeOut(cherry))
-        
-        #fingerprint = Text("Fingerprint", font_size=50)
-        #self.play(Write(fingerprint.shift(LEFT*2)))
-        #self.play(FadeOut(fingerprint))
-        
-        #bit_string = Text("0101", font_size=50)
-        #self.play(Write(bit_string.shift(LEFT*5 + DOWN*2)))
-        #self.play(bit_string.animate.shift(LEFT*4))
+        # self.play(FadeOut(cherry))
+
         all_hash = VGroup()
         for i in range(1, -1, -1):
             mathText = MathTex(f"h{i}")
             mathText.shift(UP*(i*1.2))
             all_hash.add(mathText)
         self.play(FadeIn(all_hash.shift(LEFT*2)))
-        
+
         h1Arr = Arrow(LEFT, RIGHT).shift(1.2*UP + 3.5*LEFT)
         h2Arr = Arrow(LEFT, RIGHT).shift(3.5*LEFT)
         self.play(GrowArrow(h1Arr))
         self.play(GrowArrow(h2Arr))
-        
+
         index1Arr = Arrow(LEFT, 2*UR).shift(1.2*UP)
         index2Arr = Arrow(LEFT, 2.2*DR)
         self.play(GrowArrow(index1Arr.shift(.1*DOWN + .3*LEFT)))
         self.play(GrowArrow(index2Arr.shift(.3*LEFT)))
-        
+
         self.play(FadeOut(cherry))
         self.play(FadeOut(h1Arr))
         self.play(FadeOut(h2Arr))
@@ -124,31 +115,106 @@ class CuckooFilter(Scene):
         self.play(FadeOut(index1Arr))
         self.play(FadeOut(index2Arr))
         self.hashPineapple(cherry)
-        
+
     def hashPineapple(self, cherry):
         pineapple = ImageMobject(
             "images/8-bit-pineapple.png").scale(.8).shift(5.3*LEFT)
         self.play(FadeIn(pineapple.shift(.5*UP)))
 
         self.play(Circumscribe(pineapple, shape=Circle))
-        
+
         h1Arr = Arrow(LEFT, RIGHT).shift(1.2*UP + 3.5*LEFT)
         h2Arr = Arrow(LEFT, RIGHT).shift(3.5*LEFT)
         self.play(GrowArrow(h1Arr))
         self.play(GrowArrow(h2Arr))
-        
+
         index1Arr = Arrow(LEFT, 2*UR).shift(1.2*UP)
         index2Arr = Arrow(LEFT, 2.2*DR)
         self.play(GrowArrow(index1Arr.shift(.1*DOWN + .3*LEFT)))
         self.play(GrowArrow(index2Arr.shift(.3*LEFT)))
-        
-        #self.play(cherry.animate.shift(RIGHT*2.2))
+
+        # self.play(cherry.animate.shift(RIGHT*2.2))
         self.play(FadeOut(pineapple))
-        self.play(FadeOut(h1Arr))
-        self.play(FadeOut(h2Arr))
+        self.play(FadeOut(h1Arr, h2Arr))
         self.play(FadeIn(pineapple.scale(.2).shift(UP*2.3 + RIGHT*9.5)))
-        self.play(FadeOut(index1Arr))
-        self.play(FadeOut(index2Arr))
+        self.play(FadeOut(index1Arr, index2Arr))
+
+        x_string1 = Text("X", font_size=40)
+        x_string2 = Text("X", font_size=40)
+        self.play(Write(x_string1.shift(UP*1.2 + RIGHT*2)))
+        self.play(Write(x_string2.shift(UP*1.2 + RIGHT*4.2)))
+
+        self.hashApple(cherry, pineapple)
+
+    def hashApple(self, cherry, pineapple):
+        apple = ImageMobject(
+            "images/8-bit-apple.png").scale(.6).shift(5.3*LEFT + .5*UP)
+        self.play(FadeIn(apple))
+        h1Arr = Arrow(LEFT, RIGHT).shift(1.2*UP + 3.5*LEFT)
+        h2Arr = Arrow(LEFT, RIGHT).shift(3.5*LEFT)
+        self.play(GrowArrow(h1Arr))
+        self.play(GrowArrow(h2Arr))
+
+        index1Arr = Arrow(LEFT, 2*UR).shift(1.2*UP)
+        index2Arr = Arrow(LEFT, 1.5*UP+2*RIGHT).shift(.3*DOWN)
+        self.play(GrowArrow(index1Arr.shift(.1*DOWN + .3*LEFT)))
+        self.play(GrowArrow(index2Arr.shift(.2*UP + .3*LEFT)))
+
+        self.play(Circumscribe(cherry, shape=Circle))
+        self.play(cherry.animate.shift(DOWN*4.8))
+        self.play(FadeOut(apple))
+        self.play(FadeIn(apple.scale(.3).shift(UP*2.3 + RIGHT*7.3)))
+        self.play(FadeOut(h1Arr, h2Arr, index1Arr, index2Arr))
+        self.play(Circumscribe(cherry, shape=Circle))
+
+    def ExplainFinger(self):
+        fingerprint = Text("Fingerprint", font_size=100)
+        self.play(Write(fingerprint))
+        self.play(FadeOut(fingerprint))
+
+        cherry = ImageMobject(
+            "images/8-bit-cherry.png").scale(.4).shift(5.3*LEFT)
+        self.play(FadeIn(cherry))
+
+        sendCherry = Arrow(max_stroke_width_to_length_ratio=5).shift(3.3*LEFT)
+        self.play(FadeIn(sendCherry))
+
+        fingerprint_func = Text("FP( )", font_size=80).shift(1.3*LEFT)
+        self.play(Write(fingerprint_func))
+
+        sendResult = Arrow(max_stroke_width_to_length_ratio=5).shift(RIGHT)
+        self.play(FadeIn(sendResult))
+
+        fingerprint_bits = Text("0101", font_size=80).shift(3*RIGHT)
+        self.play(Write(fingerprint_bits))
+
+        self.play(FadeOut(Group(*self.mobjects)))
+        self.play(FadeIn(cherry.shift(.5*UP)))
+        self.play(Write(fingerprint_bits.shift(8.2*LEFT + 2.5*UP)))
+
+        self.MakeDataStructure(play_cherry=False)
+
+        all_hash = VGroup()
+        for i in range(1, -1, -1):
+            mathText = MathTex(f"h{i}")
+            mathText.shift(UP*(i*1.2))
+            all_hash.add(mathText)
+        self.play(FadeIn(all_hash.shift(LEFT*2)))
+
+        h1Arr = Arrow(LEFT, RIGHT).shift(1.2*UP + 3.5*LEFT)
+        h2Arr = Arrow(LEFT, RIGHT).shift(3.5*LEFT)
+        self.play(GrowArrow(h1Arr))
+        self.play(GrowArrow(h2Arr))
+
+        index1Arr = Arrow(LEFT, 2*UR).shift(1.2*UP)
+        index2Arr = Arrow(LEFT, 2.2*DR)
+        self.play(GrowArrow(index1Arr.shift(.1*DOWN + .3*LEFT)))
+        self.play(GrowArrow(index2Arr.shift(.3*LEFT)))
+
+        self.play(FadeOut(fingerprint_bits))
+        self.play(FadeIn(fingerprint_bits.scale(.2).shift(7.2*RIGHT + .2*UP)))
+
+        self.play(FadeOut(Group(*self.mobjects)))
 
 
 class Vert_Array(VMobject):
