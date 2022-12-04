@@ -12,6 +12,7 @@ class CuckooFilter(Scene):
         self.ExplainHashes()
         self.LookUpAndDelete()
         self.FalsePositive()
+        self.WriteQuestion()
         
 
     def WriteQuestion(self):
