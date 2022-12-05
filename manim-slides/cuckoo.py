@@ -3,21 +3,22 @@ import numpy as np
 
 class CuckooFilter(Scene):
     def construct(self):
-        self.WriteQuestion()
-        self.PoseMotivation()
-        self.ListGoals()
+        #self.WriteQuestion()
+        #self.PoseMotivation()
+        #self.ListGoals()
         self.MakeDataStructure()
-        self.ExplainFinger()
-        self.Cycles()
+        '''self.ExplainFinger()
         self.ExplainHashes()
+        self.Cycles()
         self.LookUpAndDelete()
         self.FalsePositive()
-        self.WriteQuestion()
+        self.Future()
+        self.WriteQuestion()'''
         
 
     def WriteQuestion(self):
         text = Text("What is a 🐔 filter?", font_size=100)
-        self.play(Write(text))
+        self.play(Write(text), run_time=3)
         self.play(FadeOut(text))
 
     def PoseMotivation(self):
@@ -29,9 +30,12 @@ class CuckooFilter(Scene):
         speech_bubble = VGroup()
         speech_bubble.add(bubble, cherry_text).shift(5*LEFT).shift(0.5 * UP)
         self.play(FadeIn(kirby))
+        self.wait(1.5)
         self.play(kirby.animate.shift(5*LEFT).shift(2*DOWN))
         self.play(FadeIn(food_pile))
+        self.wait(14)
         self.play(FadeIn(speech_bubble))
+        self.wait(3)
         self.play(FadeOut(Group(*self.mobjects)))
 
     def ListGoals(self):
@@ -47,8 +51,11 @@ class CuckooFilter(Scene):
         background_goals.add(background, g_1, g_2, g_3)
         self.play(DrawBorderThenFill(background))
         self.play(Write(g_1))
+        self.wait(13)
         self.play(Write(g_2))
+        self.wait(13)
         self.play(Write(g_3))
+        self.wait(10)
         self.play(background_goals.animate.shift(4*LEFT).shift(2.5*UP))
 
         bloom_text = "Bloom Filter"
@@ -57,7 +64,9 @@ class CuckooFilter(Scene):
         bloom_filter = Group()
         bloom_filter.add(bloom, bloom_pic).scale(.5).shift(DOWN)
         self.play(FadeIn(bloom_filter))
+        self.wait(5)
         self.play(bloom_filter.animate.shift(3.3*UP).shift(4*RIGHT))
+        self.wait(5)
         self.play(Circumscribe(g_3))
 
         kirby = ImageMobject("images/8-bit-kirby.png").shift(2.4*DOWN)
@@ -67,7 +76,9 @@ class CuckooFilter(Scene):
         kirby_speech_bubble = Group()
         kirby_speech_bubble.add(kirby, bubble, cherry_text).shift(
             5*LEFT).shift(0.5 * DOWN)
+        self.wait(10)
         self.play(FadeIn(kirby_speech_bubble))
+        self.wait(10)
 
         self.play(FadeOut(Group(*self.mobjects)))
 
@@ -84,6 +95,8 @@ class CuckooFilter(Scene):
                                         color=LIGHT_GRAY, indices=True).shift(2.2*i*RIGHT))
         self.play(FadeIn(cuckooFilter.shift(2*RIGHT)))
         self.play(FadeIn(middle_group.shift(2.8*UP).shift(3*RIGHT)))
+        #9 secs pass
+        self.wait(15)
 
         if play_cherry:
             self.hashCherry()
@@ -93,8 +106,9 @@ class CuckooFilter(Scene):
         cherry = ImageMobject(
             "images/8-bit-cherry.png").scale(.4).shift(5.3*LEFT)
         self.play(FadeIn(cherry.shift(.5*UP)))
-
+        self.wait(5)
         self.play(Circumscribe(cherry, shape=Circle))
+        self.wait(5)
         # self.play(FadeOut(cherry))
 
         all_hash = VGroup()
@@ -103,52 +117,58 @@ class CuckooFilter(Scene):
             mathText.shift(UP*(i*1.2))
             all_hash.add(mathText)
         self.play(FadeIn(all_hash.shift(LEFT*2)))
+        self.wait(5)
 
         h1Arr = Arrow(LEFT, RIGHT).shift(1.2*UP + 3.5*LEFT)
         h2Arr = Arrow(LEFT, RIGHT).shift(3.5*LEFT)
         self.play(GrowArrow(h1Arr))
         self.play(GrowArrow(h2Arr))
-
+        self.wait(5)
         index1Arr = Arrow(LEFT, 2*UR).shift(1.2*UP)
         index2Arr = Arrow(LEFT, 2.2*DR)
         self.play(GrowArrow(index1Arr.shift(.1*DOWN + .3*LEFT)))
         self.play(GrowArrow(index2Arr.shift(.3*LEFT)))
-
+        self.wait(15)
         self.play(FadeOut(cherry))
         self.play(FadeOut(h1Arr))
         self.play(FadeOut(h2Arr))
         self.play(FadeIn(cherry.scale(.2).shift(UP*2.3 + RIGHT*7.3)))
         self.play(FadeOut(index1Arr))
         self.play(FadeOut(index2Arr))
+        self.wait(15)
         self.hashPineapple(cherry)
 
     def hashPineapple(self, cherry):
         pineapple = ImageMobject(
             "images/8-bit-pineapple.png").scale(.8).shift(5.3*LEFT)
         self.play(FadeIn(pineapple.shift(.5*UP)))
-
+        self.wait(5)
         self.play(Circumscribe(pineapple, shape=Circle))
-
+        self.wait(5)
         h1Arr = Arrow(LEFT, RIGHT).shift(1.2*UP + 3.5*LEFT)
         h2Arr = Arrow(LEFT, RIGHT).shift(3.5*LEFT)
         self.play(GrowArrow(h1Arr))
         self.play(GrowArrow(h2Arr))
+        self.wait(15)
 
         index1Arr = Arrow(LEFT, 2*UR).shift(1.2*UP)
         index2Arr = Arrow(LEFT, 2.2*DR)
         self.play(GrowArrow(index1Arr.shift(.1*DOWN + .3*LEFT)))
         self.play(GrowArrow(index2Arr.shift(.3*LEFT)))
+        self.wait(15)
 
         # self.play(cherry.animate.shift(RIGHT*2.2))
         self.play(FadeOut(pineapple))
         self.play(FadeOut(h1Arr, h2Arr))
         self.play(FadeIn(pineapple.scale(.2).shift(UP*2.3 + RIGHT*9.5)))
         self.play(FadeOut(index1Arr, index2Arr))
+        self.wait(15)
 
         x_string1 = Text("X", font_size=40)
         x_string2 = Text("X", font_size=40)
         self.play(Write(x_string1.shift(UP*1.2 + RIGHT*2)))
         self.play(Write(x_string2.shift(UP*1.2 + RIGHT*4.2)))
+        self.wait(15)
 
         self.hashApple(cherry, pineapple)
 
@@ -156,22 +176,27 @@ class CuckooFilter(Scene):
         apple = ImageMobject(
             "images/8-bit-apple.png").scale(.6).shift(5.3*LEFT + .5*UP)
         self.play(FadeIn(apple))
+        self.wait(5)
         h1Arr = Arrow(LEFT, RIGHT).shift(1.2*UP + 3.5*LEFT)
         h2Arr = Arrow(LEFT, RIGHT).shift(3.5*LEFT)
         self.play(GrowArrow(h1Arr))
         self.play(GrowArrow(h2Arr))
+        self.wait(5)
 
         index1Arr = Arrow(LEFT, 2*UR).shift(1.2*UP)
         index2Arr = Arrow(LEFT, 1.5*UP+2*RIGHT).shift(.3*DOWN)
         self.play(GrowArrow(index1Arr.shift(.1*DOWN + .3*LEFT)))
         self.play(GrowArrow(index2Arr.shift(.2*UP + .3*LEFT)))
-
+        self.wait(5)
+        
         self.play(Circumscribe(cherry, shape=Circle))
+        self.wait(5)
         self.play(cherry.animate.shift(DOWN*4.8))
         self.play(FadeOut(apple))
         self.play(FadeIn(apple.scale(.3).shift(UP*2.3 + RIGHT*7.3)))
         self.play(FadeOut(h1Arr, h2Arr, index1Arr, index2Arr))
         self.play(Circumscribe(cherry, shape=Circle))
+        self.wait(5)
 
     def ExplainFinger(self):
         fingerprint = Text("Fingerprint", font_size=100)
@@ -380,7 +405,7 @@ class CuckooFilter(Scene):
         prob_tex = Text("Probablity:", font_size=40).shift(LEFT + 2.5*UR + 1.5*RIGHT + .3*DOWN)
         self.play(FadeOut(probability))
         probability = MathTex("{2 \over m} \cdot ({1 \over 2})^f").shift(1.8*RIGHT + 2.5*UR + 1.5*RIGHT + .3*DOWN)
-        prob_sen = VGroup(prob_tex, probability)
+        prob_sen = VGroup(prob_tex, probability).shift(4.3*LEFT + 1.5*DOWN)
         self.play(FadeIn(prob_sen))
         
         self.play(FadeOut(Group(*self.mobjects)))
@@ -442,7 +467,16 @@ class CuckooFilter(Scene):
         self.play(Write(cycText))
         
         self.play(FadeOut(Group(*self.mobjects)))
-        
+    
+    def Future(self):
+        len_fp = Text("How long should the finger print be?", font_size=50).shift(2*UP)
+        len_bucket = Text("How large should the table be?", font_size=50)
+        xor_hash = Text("Why did we hash the fingerprint before the XOR?", font_size=40).shift(2*DOWN)
+        self.play(Write(len_fp))
+        self.play(Write(len_bucket))
+        self.play(Write(xor_hash))
+        self.play(FadeOut(len_fp, len_bucket, xor_hash))
+
 
 class Vert_Array(VMobject):
     def __init__(self, array_len, box_size, color=WHITE, indices=False, **kwargs):
