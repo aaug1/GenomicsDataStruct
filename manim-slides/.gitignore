@@ -5,7 +5,10 @@ __pycache__/
 /dist
 *.egg-info/
 
-/media
+/media/images
+/media/Tex
+/media/texts
+/media/videos/bloom/1080p60/partial_movie_files
 /presentation
 
 /.vscode
@@ -14,7 +17,6 @@ slides/
 
 .manim-slides.json
 
-videos/
 
 images/
 

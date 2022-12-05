@@ -4,6 +4,7 @@ from manim_slides import Slide
 from manim.mobject.types.vectorized_mobject import VGroup, VMobject
 from BloomFilter import BloomFilter
 import random
+import math
 
 
 class Bloom(Slide):
@@ -13,7 +14,6 @@ class Bloom(Slide):
         array_len = 15
         num_hash = 5
         sample_keys = ["AAA", "GGG", "Langmead"]
-        sample_keys = ["AAA"]
         non_keys = ["CCC", "TTT", "Lang"]
         box_size = 8 / (array_len)
 
@@ -81,7 +81,7 @@ class Bloom(Slide):
         self.arrow = Arrow(buff=0.2, start=ORIGIN, end=RIGHT,
                            stroke_width=8, max_stroke_width_to_length_ratio=10)
         box = self.create_function()
-        self.show_input(box, sample_keys, non_keys)
+        input_mobject = self.show_input(box, sample_keys, non_keys)
 
         array.init_val_zero()
         array.show_indices()
@@ -91,9 +91,10 @@ class Bloom(Slide):
         ############### Slide 2: Shift and move hash functions above the array###############
         self.slide2(array, hash, num_hash)
         self.highlight(self.code_lines, 1, 2)
+        num_bloom_keys, math_prob_val = self.add_probability(num_hash, array_len, input_mobject)
 
         ############### Slide 3: Map each key to the block ###############
-        self.slide3(array, num_hash, hash, sample_keys)
+        self.slide3(array, num_hash, hash, sample_keys, num_bloom_keys, math_prob_val)
         self.highlight(self.code_lines, 2, 3)
 
         ############### Slide 4: Query keys we stored ###############
@@ -142,9 +143,40 @@ class Bloom(Slide):
         self.highlight(code_lines, 0, 0)
         return box
 
+    def calc_probability(self, k, m, n):
+      return (1 - math.exp((-k*n)/m))**k
+    
+    def add_probability(self, num_hash, input_len, input_mobject):
+      text = Tex('Probability of a false positive:').scale(0.5).next_to(input_mobject, DOWN).align_to(input_mobject, LEFT)
+      self.play(Write(text))
+
+      math_prob = MathTex(r"\left( 1 - e^{- \frac{kn}{m}} \right)^{k}").scale(0.75).next_to(text, 0.5 * DOWN).align_to(text, LEFT)
+      self.play(Write(math_prob))
+
+
+      k_tex = Text(f"k = # indep. hash: {num_hash}").next_to(math_prob, 0.25 * RIGHT).scale(0.3).next_to(math_prob, 0.25 * RIGHT).shift(RIGHT * 0.25)
+      m_tex = Text(f"m = table size: {input_len}").next_to(k_tex, 0.5 * DOWN).scale(0.3).align_to(k_tex, LEFT)
+      n_tex = Text(f"n = # keys:    ").next_to(m_tex, 0.5 * DOWN).scale(0.3).align_to(k_tex, LEFT)
+      num_bloom_keys = ValueTracker(0)
+      n_tex_val = always_redraw(lambda: Integer(num_bloom_keys.get_value()).move_to(n_tex.get_right() + 0.25 * RIGHT).scale(0.75))
+
+      all_variables = VGroup(k_tex, m_tex, n_tex)
+      self.play(Write(all_variables))
+      self.play(Write(n_tex_val))
+
+      math_prob_val = ValueTracker(0)
+      math_prob_calc = always_redraw(lambda: DecimalNumber(self.calc_probability(num_hash, input_len, num_bloom_keys.get_value()), num_decimal_places=3).scale(0.75).next_to(text, RIGHT))
+      self.play(Write(math_prob_calc))
+      # self.play(num_bloom_keys.animate.set_value(10), run_time = 2)
+      # self.wait(2)
+      # self.play(num_bloom_keys.animate.set_value(20), run_time = 2)
+
+      return num_bloom_keys, math_prob_val
+
+
     # Animates the input strings and output strings
     def show_input(self, box, sample_keys, non_keys):
-        input_string = "Input keys:\n ["
+        input_string = "Input keys:\n["
         for i in range(len(sample_keys)):
             input_string += f"{sample_keys[i]}"
             if i != len(sample_keys) - 1:
@@ -154,12 +186,12 @@ class Bloom(Slide):
                 break
             if i % 20 == 19:
                 input_string += "\n"
-        t1 = Text(input_string).scale(0.5).next_to(
+        t1 = Text(input_string).scale(0.35).next_to(
             box, DOWN).set_color(GREEN_A)
         t1.align_to(box, LEFT)
         self.play(Write(t1))
 
-        non_input_string = "Not in input:\n ["
+        non_input_string = "Not in input:\n["
         for i in range(len(non_keys)):
             non_input_string += f"{non_keys[i]}"
             if i != len(non_keys) - 1:
@@ -170,9 +202,10 @@ class Bloom(Slide):
             if i % 20 == 19:
                 non_input_string += "\n"
         t2 = Text(non_input_string).scale(
-            0.5).next_to(t1, DOWN).set_color(RED_A)
-        t2.align_to(box, LEFT)
+            0.35).next_to(t1, RIGHT).set_color(RED_A)
+        t2.align_to(box, RIGHT)
         self.play(Write(t2))
+        return t1
 
     # Moves the yellow arrow in the function block from create_function
 
@@ -225,10 +258,11 @@ class Bloom(Slide):
         return out_arrows_list
 
 
-    def slide3(self, array, num_hash, hash, sample_keys):
+    def slide3(self, array, num_hash, hash, sample_keys, num_bloom_keys, math_prob_val):
         # Animate the hash functions
         bloom_indices_all = [[0, 4, 9, 10, 13],
                              [0, 5, 9, 10, 11], [0, 1, 3, 8, 8]]
+        count = 0
         for i, key in enumerate(sample_keys):
             bloom_indices = bloom_indices_all[i]
             key = Tex(key).move_to(array.get_center() + 5 * UP)
@@ -242,6 +276,10 @@ class Bloom(Slide):
             for i in set(bloom_indices):
                 animate_out_arrows.append(Write(nums[i].set_value(1)))
             self.play(*animate_out_arrows)
+            count += 1
+            self.play(num_bloom_keys.animate.set_value(count), run_time = 2)
+            self.play(math_prob_val.animate.set_value(math_prob_val.get_value()), run_time = 2)
+            
 
             self.pause()
             self.play(Unwrite(VGroup(*out_arrows_list)), run_time=1)
@@ -278,8 +316,8 @@ class Bloom(Slide):
     def slide5(self, array, num_hash, hash, non_keys):
         # Checking non-input keys (mapped to same or different indices by chance)
         bloom_indices_all = [[0, 4, 7, 10, 14],
-                             [0, 5, 9, 10, 11], [0, 1, 2, 3, 12]]
-        yes_no = [1, 0, 1]
+                             [0, 3, 9, 11, 13], [0, 2, 3, 8, 12]]
+        yes_no = [0, 1, 0]
         for i, key in enumerate(non_keys):
             bloom_indices = bloom_indices_all[i]
             key_tex = Tex(key).move_to(array.get_center() + 5 * UP)
@@ -288,7 +326,7 @@ class Bloom(Slide):
 
             if yes_no[i] == 0:
                 output = f"Key {key} does not exist in the data structure!"
-                color = PURE_RED
+                color = RED_C
             else:
                 output = f"Key {key} might exist in the data structure!"
                 color = PURE_GREEN
