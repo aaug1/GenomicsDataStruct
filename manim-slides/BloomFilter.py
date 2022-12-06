@@ -87,7 +87,7 @@ class BloomFilter:
         return indices
 
     def check(self, key):
-        """Determines if key is probably in bloom filter or not"""
+        """Determines if key is in bloom filter or not"""
         for i in range(self.num_hash):
             hash = self.hash_functions[i]
             index = self.hashStr(key, hash)
@@ -95,7 +95,7 @@ class BloomFilter:
                 print(f"Key: {key} does not exist in the database")
                 return 0
 
-        print(f"Key {key} probably exists in the database")
+        print(f"Key {key} might exists in the database")
         return 1
       
     def check_return_indices(self, key):
@@ -117,7 +117,7 @@ class BloomFilter:
                 print(f"Key: {key} does not exist in the database")
                 return 0
 
-        print(f"Key {key} probably exists in the database. Checking...")
+        print(f"Key {key} might exists in the database. Checking...")
         if key in self.true_data:
             print(f"Key {key} was found. True positive.")
             return 0

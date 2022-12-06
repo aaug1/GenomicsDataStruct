@@ -10,11 +10,10 @@ import math
 class CountMinIntro(Slide):
     def construct(self):
         # Define input parameters
-
         array_len = 10
         num_hash = 3
         sample_keys = ["AAA", "GGG"] #"AAA", "AAA", "GGG", "ATA"
-        test_keys = ["AAA", "GGG", "TTT"]
+        test_keys = ["AAA"]
         box_size = 8 / (array_len)
 
         # Create the array
@@ -104,15 +103,15 @@ class CountMinIntro(Slide):
 
         ############### Slide 1: Initialize array of zeros ###############
         # # Create Pseudocode Block
-        blist1_title = Text("About").next_to(title, DOWN).to_edge(LEFT).scale(0.5)
+        blist1_title = Text("About").next_to(title, DOWN).scale(0.5)
         blist1 = BulletedList(
           "Prob. Data Struct.", 
           "Similar to Bloom, but with input\ndata stream", 
           "Estimates frequency of input", 
-          height=2, width=5).next_to(blist1_title, DOWN).to_edge(LEFT)
+          height=2, width=5).next_to(blist1_title, DOWN)
+        blist1_all = VGroup(blist1_title, blist1).to_edge(LEFT)
         self.play(Write(blist1_title))
         self.play(Write(blist1))
-        blist1_all = VGroup(blist1_title, blist1)
 
         blist2_title = Text("How to Use:").scale(0.5)
         blist2 = BulletedList(
@@ -123,6 +122,7 @@ class CountMinIntro(Slide):
         blist2_all = VGroup(blist2_title, blist2).next_to(title, DOWN).to_edge(RIGHT)
         self.play(Write(blist2_title))
         self.play(Write(blist2))
+
         self.play(blist2.animate.set_color_by_tex("Initialize 2D array of 0", YELLOW), run_time=2)
         array.init_val_zero()
         array.show_indices()
@@ -138,6 +138,9 @@ class CountMinIntro(Slide):
           [1, 3, 9],
           [2, 3, 8]
           ]
+        self.play(blist2.animate.set_color_by_tex("Initialize 2D array of 0", WHITE), run_time=2)
+        self.play(blist2.animate.set_color_by_tex("Pass input through each hash + map to indices", YELLOW), run_time=2)
+
         for i, key in enumerate(sample_keys):
           key_mobj = Tex(key).scale(0.75)
           key_mobj.add_updater(lambda x: x.move_to(d1.get_center() + UP * 0.5))
@@ -152,11 +155,91 @@ class CountMinIntro(Slide):
           self.play(Unwrite(key_mobj), run_time=0.5)
 
           ## Arrows
-          self.map_arrows(num_hash, hash, d1, squares, all_m_vals[i], array)
-
-
-
+          delete_out_arrows = self.map_arrows(num_hash, hash, d1, squares, all_m_vals[i], array)
           d1.move_to(l1.get_left())
+          nums = array.get_values()
+          update_vals = []
+          m_vals = all_m_vals[i]
+          for i in range(num_hash):
+            cur = nums[i][m_vals[num_hash - i - 1]].get_value() + 1
+            update_vals.append(Write(nums[i][m_vals[num_hash - i - 1]].set_value(cur)))
+          self.play(*update_vals, run_time = 1)
+          self.play(*delete_out_arrows, run_time=0.5)
+
+        # Slide 2: Make space for query procedure
+        self.play(Unwrite(blist1_all))
+        self.play(blist2_all.animate.to_edge(LEFT))
+        self.wait()
+
+        self.play(blist2.animate.set_color_by_tex("Pass input through each hash + map to indices", WHITE), run_time=2)
+        self.play(blist2.animate.set_color_by_tex("Query: take min of mapped indices", YELLOW), run_time=2)
+
+        blist3_title = Text("Query:").scale(0.5)
+        blist3 = BulletedList(
+          "Take min of values at mapped indices",
+          "Provides an upper bound for frequency", 
+          height=2, width=5).next_to(blist3_title, DOWN)
+        blist3_all = VGroup(blist3_title, blist3).next_to(title, DOWN).to_edge(RIGHT)
+        self.play(Write(blist3_all))
+
+         # Slide 3: Query the query keys
+        for i, key in enumerate(test_keys):
+          key_mobj = Tex(key).scale(0.75)
+          key_mobj.add_updater(lambda x: x.move_to(d1.get_center() + UP * 0.5))
+          self.play(Write(key_mobj))
+          d1 = Dot().set_color(ORANGE)
+          l1 = Line(3 * LEFT, RIGHT).to_edge(LEFT).set_y(count_min.get_y())
+          d1.move_to(l1.get_left())
+          l2 = VMobject()
+          self.add(d1, l1, l2)
+          l2.add_updater(lambda x: x.become(Line(l1.get_left(), d1.get_center()).set_color(ORANGE)))
+          self.play(MoveAlongPath(d1, l1), rate_func=linear, run_time=3)
+          self.play(Unwrite(key_mobj), run_time=0.5)
+
+          ## Arrows
+          delete_out_arrows = self.map_arrows(num_hash, hash, d1, squares, all_m_vals[i], array)
+          d1.move_to(l1.get_left())
+          nums = array.get_values()
+          update_vals = []
+          m_vals = all_m_vals[i]
+          all_hash_vals = []
+          for i in range(num_hash):
+            cur = str(nums[i][m_vals[num_hash - i - 1]].get_value())
+            all_hash_vals.append(cur)
+
+          self.play(*delete_out_arrows, run_time=0.5)
+
+          # Display the equation underneath underneath
+          min_val = MathTex(f'\min ( {",".join(all_hash_vals)} ) = {min(all_hash_vals)}').next_to(array, DOWN)
+          self.play(Write(min_val))
+          self.wait()
+          self.play(Unwrite(min_val))
+
+
+        ################ Fade out everything ###############
+        self.play(
+            *[FadeOut(mob)for mob in self.mobjects]
+        )
+        ## Conclusion
+        self.conclusion()
+
+
+          
+
+
+    def conclusion(self):
+        # Text for conclusion slide
+        title = Text(f"Thank you!")
+        subtitle1 = Text(f"Computational Genomics: Final Project",
+                         slant=ITALIC).next_to(title, DOWN)
+        subtitle2 = Text(f"Team 42", slant=ITALIC).next_to(subtitle1, DOWN)
+        subtitle3 = Text(f"Aidan Aug, Karen He, Mark Tiavises, Alan Zhang",
+                         slant=ITALIC).next_to(subtitle2, DOWN)
+        self.play(Write(title), run_time=1)
+        self.play(Write(subtitle1.scale(0.6)), run_time=0.5)
+        self.play(Write(subtitle2.scale(0.5)), Write(
+            subtitle3.scale(0.5)), run_time=0.5)
+
 
           
     def map_arrows(self, num_hash, hash, d1, squares, m_vals, array):
@@ -190,12 +273,10 @@ class CountMinIntro(Slide):
         self.play(*animate_in_arrows, run_time=1)
         self.play(*delete_in_arrows, run_time=0.5)
         self.play(*animate_out_arrows, run_time=1)
-        nums = array.get_values()
-        for i in range(num_hash):
-          self.play(Write(nums[i][m_vals[num_hash - i - 1]].set_value(1)), run_time=0.5)
 
+        return delete_out_arrows
 
-        self.play(*delete_out_arrows, run_time=0.5)
+        
 
     # Animates the input strings and output strings
     def show_input(self, sample_keys, test_keys):
@@ -211,7 +292,7 @@ class CountMinIntro(Slide):
                 input_string += "\n"
         t1 = Text(input_string).scale(0.35).set_color(GREEN_A)
 
-        non_input_string = "Not in input:\n["
+        non_input_string = "Query keys:\n["
         for i in range(len(test_keys)):
             non_input_string += f"{test_keys[i]}"
             if i != len(test_keys) - 1:
