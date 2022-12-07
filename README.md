@@ -1,9 +1,8 @@
 # Computational Genomics: Team 42 Final Project<!-- omit in toc -->
 **Authors**: Aidan Aug, Mark Tiavas, Karen He, Alan Zhang
 
-<img src="https://raw.githubusercontent.com/jeertmans/manim-slides/main/static/logo.png" alt="drawing" width="200"/>
-<img src="https://raw.githubusercontent.com/ManimCommunity/manim/main/logo/cropped.png" alt="drawing" width="200"/>
-<!-- <img src="https://www.manim.community/logo.svg" alt="drawing" width="100"/> -->
+
+<img src="https://raw.githubusercontent.com/jeertmans/manim-slides/main/static/logo.png" alt="drawing" width="200"/> <img src="https://raw.githubusercontent.com/ManimCommunity/manim/main/logo/cropped.png" alt="drawing" width="200"/>
 
 [![Latest Release][pypi-version-badge]][pypi-version-url]
 [![Python version][pypi-python-version-badge]][pypi-version-url]
@@ -32,6 +31,7 @@ This GitHub repository contains the source code for the data structures implemen
 
 # Implementation Code
 ---
+Code for implementations can be found in **prob-data-struct** folder.
 
 
 
