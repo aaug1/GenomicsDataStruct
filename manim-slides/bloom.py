@@ -2,7 +2,6 @@ from manim import *
 # or: from manimlib import *
 from manim_slides import Slide
 from manim.mobject.types.vectorized_mobject import VGroup, VMobject
-from BloomFilter import BloomFilter
 import random
 import math
 
