@@ -1,3 +1,5 @@
+![Kirby Mascot]
+
 # Computational Genomics: Team 42 Final Project<!-- omit in toc -->
 **Authors**: Aidan Aug, Mark Tiavas, Karen He, Alan Zhang
 
@@ -205,7 +207,7 @@ Below is a non-exhaustive list of features:
 On Windows platform, one may encounter a lower image resolution than expected. Usually, this is observed because Windows rescales every application to fit the screen.
 As found by [@arashash](https://github.com/arashash), in [#20](https://github.com/jeertmans/manim-slides/issues/20), the problem can be addressed by changing the scaling factor to 100%:
 
-![Windows Fix Scaling](static/windows_quality_fix.png)
+![Windows Fix Scaling]
 
 in *Settings*->*Display*.
 
@@ -213,3 +215,5 @@ in *Settings*->*Display*.
 [pypi-version-badge]: https://img.shields.io/pypi/v/manim-slides?label=manim-slides
 [pypi-version-url]: https://pypi.org/project/manim-slides/
 [pypi-python-version-badge]: https://img.shields.io/pypi/pyversions/manim-slides
+[Kirby Mascot]: ./manim-slides/images/8-bit-kirby.png
+[Windows Fix Scaling]: https://i.ibb.co/9tJjZZ6/windows-quality-fix.png

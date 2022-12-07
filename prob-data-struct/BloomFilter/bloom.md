@@ -8,8 +8,7 @@ Hash tables are frequently implemented for data storage due to the
 fast lookup time of a query / search. However, what if we had more rigorous
 size constraints? Or
 
-**Bloom Filters** are a *probabilistic data structure* that, in respeonse to a search or query
-of a key, will return either
+**Bloom Filters** are a *probabilistic data structure* that, in response to a search or query of a key, will return either
 
 1. **Probably** yes  
 2. Definitely no
