@@ -2,10 +2,11 @@ import hashlib
 import math
 import random
 
-# Sources used 
+# Sources used
 # https://www.pdl.cmu.edu/PDL-FTP/FS/cuckoo-conext2014.pdf
 # https://medium.com/@meeusdylan/implementing-a-cuckoo-filter-in-go-147a5f1f7a9
 # https://cs.stackexchange.com/questions/81876/cuckoo-filters-for-non-powers-of-2
+
 
 class CuckooFilter:
   # n = len(items), fp = false positive rate
@@ -78,14 +79,14 @@ class CuckooFilter:
 
     def hashes(self, val: str):
         h = self.sha_hash(bytes(val, 'utf-8'))
-        # We want to store the finger print, not the value
+        # We want to insert the finger print, not the value
         fingerprint = h[0: self.f]
         i1 = int.from_bytes(h, "big")
         hash_f = int.from_bytes(self.sha_hash(fingerprint), "big")
         # xor because I no longer need to rely on the value string to calculate a second hash in collisions.
         # I can get an alternate by xoring i1 and hash of a finger print to get the 2nd index later on
         i2 = i1 ^ hash_f
-        # returning the really big indicies and the fingerprint to store
+        # returning the really big indicies and the fingerprint to insert
         # the modulo self.m is to cap the i1 nad i2 to be indicies of the actual buckets array
         return i1, i2, fingerprint
 
@@ -116,10 +117,23 @@ class CuckooFilter:
         return i
 
 
-p1 = CuckooFilter(3, 0.1)
+# Initialize the cuckoo filter,
+# need to give it how many entries you want in a bucket and the desired false positive rate
+x = CuckooFilter(30, .05)
 
-p1.insert('qojngwdf112323')
-p1.insert('somethiqweng')
-print(p1.lookup('somethiqweng'))
-p1.delete('somethiqweng')
-print(p1.lookup('somethiqweng'))
+# insert sequence of keys
+x.insert("cherry")
+print("inserted a cherry")
+x.insert("pineapple")
+print("inserted a pineapple")
+x.insert("apple")
+print("inserted an apple")
+
+# # Check those keys probably exist
+print('Check presence')
+print(f'Is cherry in the filter: {str(x.lookup("cherry"))}')
+print(f'Is pineapple in the filter: {str(x.lookup("pineapple"))}')
+print(f'Is apple in the filter: {str(x.lookup("apple"))}')
+
+# # Check those keys do not exist
+print(f'Is spoiled cherry in the filter: {str(x.lookup("spoiled cherry"))}')
