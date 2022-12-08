@@ -99,6 +99,7 @@ class CuckooFilter:
     def fingerprintLength(self, b: int, e: float):
         f = math.ceil(math.log(2 * float(b) / e))
         f /= 8  # divide by 8 to get the number of bytes
+        print(f)
         if f < 1:
             return 1
         return f  # We want to limit the bytes to at least 1.
@@ -119,21 +120,52 @@ class CuckooFilter:
 
 # Initialize the cuckoo filter,
 # need to give it how many entries you want in a bucket and the desired false positive rate
-x = CuckooFilter(30, .05)
+x = CuckooFilter(5, .05)
+
+x.insert("AA")
+x.insert("AC")
+x.insert("AG")
+x.insert("AT")
+x.insert("CA")
+x.insert("CC")
+x.insert("CG")
+x.insert("CT")
+
+# # lookup those keys probably exist
+print('lookup presence for those in')
+print(x.lookup("AA"))
+print(x.lookup("AC"))
+print(x.lookup("AG"))
+print(x.lookup("AT"))
+print(x.lookup("CA"))
+print(x.lookup("CC"))
+print(x.lookup("CG"))
+print(x.lookup("CT"))
+
+# # lookup for keys that likely do not exist
+print('lookup presence for those not in')
+print(x.lookup("GA"))
+print(x.lookup("GC"))
+print(x.lookup("GG"))
+print(x.lookup("TT"))
+print(x.lookup("TA"))
+print(x.lookup("TC"))
+print(x.lookup("TG"))
+print(x.lookup("TT"))
 
 # insert sequence of keys
-x.insert("cherry")
-print("inserted a cherry")
-x.insert("pineapple")
-print("inserted a pineapple")
-x.insert("apple")
-print("inserted an apple")
+# x.insert("cherry")
+# print("inserted a cherry")
+# x.insert("pineapple")
+# print("inserted a pineapple")
+# x.insert("apple")
+# print("inserted an apple")
 
-# # Check those keys probably exist
-print('Check presence')
-print(f'Is cherry in the filter: {str(x.lookup("cherry"))}')
-print(f'Is pineapple in the filter: {str(x.lookup("pineapple"))}')
-print(f'Is apple in the filter: {str(x.lookup("apple"))}')
+# # # lookup those keys probably exist
+# print('lookup presence')
+# print(f'Is cherry in the filter: {str(print(x.lookup("cherry"))}')
+# print(f'Is pineapple in the filter: {str(print(x.lookup("pineapple"))}')
+# print(f'Is apple in the filter: {str(print(x.lookup("apple"))}')
 
-# # Check those keys do not exist
-print(f'Is spoiled cherry in the filter: {str(x.lookup("spoiled cherry"))}')
+# # # lookup those keys do not exist
+# print(f'Is spoiled cherry in the filter: {str(print(x.lookup("spoiled cherry"))}')
