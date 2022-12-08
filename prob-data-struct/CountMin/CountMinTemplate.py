@@ -13,8 +13,9 @@ def convert_to_int(seq):
 
 class CountMin:
     def __init__(self, epsilon, delta):
-        self.w = math.ceil(math.e / epsilon)
-        self.d = math.ceil(math.log(1 / delta))
+
+        self.w = None
+        self.d = None
         self.sketch = [ [ 0 for i in range(self.w) ] for j in range(self.d) ]
 
         self.p = 2 ** 61 - 1
@@ -23,21 +24,17 @@ class CountMin:
         for i in range(self.d):
             self.a.append(2 * (i + 1) + 1)
             self.b.append(i + 1)
+    
+    def hash(self, i, index):
+        return (index * self.a[i] + self.b[i]) % self.p % self.w
 
     def store(self, index, num):
-        for i in range(self.d):
-            idx = (index * self.a[i] + self.b[i]) % self.p % self.w
-            self.sketch[i][idx] += num
+        # TODO
+        return
 
     def check(self, index):
-        minimum = float("inf")
-        for i in range(self.d):
-            idx = (index * self.a[i] + self.b[i]) % self.p % self.w
-            minimum = min(minimum, self.sketch[i][idx])
-        if (minimum > 0):
-            print(f"{index} Might be there: " + str(minimum))
-        else:
-            print(f"{index} Is Not there")
+        # TODO
+        return 0
 
 x = CountMin(0.25, 0.25)
 
