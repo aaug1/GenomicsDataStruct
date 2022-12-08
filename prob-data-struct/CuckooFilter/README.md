@@ -10,7 +10,8 @@ Similar to bloom filters, **cuckoo filters** are a *probabilistic data structure
 
 
 Just like hash tables, this occurs in approximately/amortized O(1) lookup time. Sometimes we need to delete an item from our data structure. Bloom filters
-risk removing multiple items 
+risk removing multiple items if some of the indices revert back to 0 because some indices being 1 can have overlap with multiple items. With Cuckoo Filters,
+the fingerprint 
 
 ## What does this have to do with cuckoo?
 
