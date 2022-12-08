@@ -1,18 +1,17 @@
-from manim import MathTex, Scene, Write, Text, FadeIn, FadeOut, ImageMobject, ArcBetweenPoints, UP, DOWN, LEFT, RIGHT, UL, UR, DL, DR, Ellipse, Rectangle, Circle, Line, Arrow, CurvedArrow, GrowArrow, ArrowSquareTip, Group, VGroup, Circumscribe, DrawBorderThenFill, BLUE_D, BLUE_B, BLUE, ORANGE, DARK_GRAY, LIGHT_GRAY, WHITE, VMobject, Square
-import numpy as np
+from manim import *
 
 
 class CuckooFilter(Scene):
     def construct(self):
-        # self.WriteQuestion()
-        # self.PoseMotivation()
-        # self.ListGoals()
-        # self.MakeDataStructure()
-        # self.ExplainFinger()
-        # self.ExplainHashes()
-        #self.Cycles()
-        #self.LookUpAndDelete()
-        #self.FalsePositive()
+        self.WriteQuestion()
+        self.PoseMotivation()
+        self.ListGoals()
+        self.MakeDataStructure()
+        self.ExplainFinger()
+        self.ExplainHashes()
+        self.Cycles()
+        self.LookUpAndDelete()
+        self.FalsePositive()
         self.Future()
         self.WriteQuestion(last=True)
 

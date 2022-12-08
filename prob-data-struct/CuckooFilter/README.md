@@ -9,7 +9,8 @@ So we just saw how bloom filters worked, so what are cuckoo filters, and how doe
 Similar to bloom filters, **cuckoo filters** are a *probabilistic data structure* that, in response to a search or query of a key, will return either
 
 
-Just like hash tables, this occurs in approximately/amortized O(1) lookup time. However, the size of this data structure can be much smaller in exchange for xyz!
+Just like hash tables, this occurs in approximately/amortized O(1) lookup time. Sometimes we need to delete an item from our data structure. Bloom filters
+risk removing multiple items 
 
 ## What does this have to do with cuckoo?
 
@@ -34,6 +35,6 @@ Just like hash tables, this occurs in approximately/amortized O(1) lookup time. 
 1. Cannot remove items from bloom filters.
 2. Uncertainty in true positives
 
-For an in-depth guide into bloom filters with explanation, please click the following link:
+For an in-depth guide into cuckoo filters with explanation, please click the following link:
 
 https://www.youtube.com/watch?v=R53DZvx8paE&ab_channel=MarkTiavises

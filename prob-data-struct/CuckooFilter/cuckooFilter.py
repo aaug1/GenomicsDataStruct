@@ -2,9 +2,10 @@ import hashlib
 import math
 import random
 
+# Sources used 
 # https://www.pdl.cmu.edu/PDL-FTP/FS/cuckoo-conext2014.pdf
 # https://medium.com/@meeusdylan/implementing-a-cuckoo-filter-in-go-147a5f1f7a9
-
+# https://cs.stackexchange.com/questions/81876/cuckoo-filters-for-non-powers-of-2
 
 class CuckooFilter:
   # n = len(items), fp = false positive rate
@@ -103,7 +104,6 @@ class CuckooFilter:
 
     # https://cs.stackexchange.com/questions/81876/cuckoo-filters-for-non-powers-of-2
     # So apparently the storage in cuckoo should be a power of 2 if you want 95% load factor
-    # Mark I need to look at this again
     def nextPower(self, i: int):
         i -= 1
         i |= i >> 1
@@ -123,6 +123,3 @@ p1.insert('somethiqweng')
 print(p1.lookup('somethiqweng'))
 p1.delete('somethiqweng')
 print(p1.lookup('somethiqweng'))
-# p1.insert('1')
-# p1.insert('2')
-# print(p1.buckets)
