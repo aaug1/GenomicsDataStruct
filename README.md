@@ -35,8 +35,24 @@ This GitHub repository contains the source code for the data structures implemen
 ---
 Code for implementations can be found in **prob-data-struct** folder.
 
+There are 3 data structures implemented, BloomFilter, CuckooFilter, and CountMin.
 
+The real implementations are in `BloomFilter.py`, `cuckooFilter.py`, and `CountMin.py`.
+Simply run the following command to test them out
 
+```bash
+  python BloomFilter.py
+```
+
+You may need to `pip install bitstring` to run `cuckooFilter.py`
+
+The homework assignment templates are in the corresponding `Template.Py` files. They also will be run by
+
+```
+  python BloomFilterTemplate.py
+```
+
+Examples inputs are present in each file. 
 
 # Manim Slides
 ---
