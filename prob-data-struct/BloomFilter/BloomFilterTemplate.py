@@ -17,15 +17,6 @@ def is_prime(n):
 class BloomFilter:
     def __init__(self, num_hash=2, size=10):
         """Generates bloom filter with universal hash family"""
-        # self.size = size
-        # all_hash = list(hashlib.algorithms_available)
-        # if len(all_hash) < num_hash:
-        #     num_hash = len(all_hash)
-        # self.num_hash = num_hash
-        # self.hash_functions = []
-        # self.bloom_filter = np.zeros(size)
-        # self.true_data = set()
-        # self.generateUniHashFunctions()
         # TODO
         self.num_hash = num_hash
         self.size = size
