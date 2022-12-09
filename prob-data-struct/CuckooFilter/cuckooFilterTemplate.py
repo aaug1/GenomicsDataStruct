@@ -53,16 +53,30 @@ class CuckooFilter:
         return False
 
     def hashes(self, val: str):
-        h = self.sha_hash(bytes(val, 'utf-8'))
+        byte_val = self.sha_hash(bytes(val, 'utf-8'))
+
+        bit_string = ''
+        for b in byte_val:
+            if len(bit_string) == self.f:
+                break
+            for i in range(8):
+                if (b >> i) & 1:
+                    bit_string += '1'
+                else:
+                    bit_string += '0'
+                if len(bit_string) == self.f:
+                    break
         # We want to insert the finger print, not the value
-        fingerprint = h[0: self.f]
-        i1 = int.from_bytes(h, "big")
-        hash_f = int.from_bytes(self.sha_hash(fingerprint), "big")
+        fingerprint = bit_string
+        i1 = int.from_bytes(byte_val, "big")
+        hash_f = int.from_bytes(self.sha_hash(
+            bytes(fingerprint, 'utf-8')), "big")
         # xor because I no longer need to rely on the value string to calculate a second hash in collisions.
         # I can get an alternate by xoring i1 and hash of a finger print to get the 2nd index later on
         i2 = i1 ^ hash_f
         # returning the really big indicies and the fingerprint to insert
         # the modulo self.m is to cap the i1 nad i2 to be indicies of the actual buckets array
+
         return i1, i2, fingerprint
 
     # val must already be in bytes
