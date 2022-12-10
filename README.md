@@ -75,6 +75,8 @@ If none of those packages are installed, please refer to their specific installa
 - [Manim](https://docs.manim.community/en/stable/installation.html)
 - [ManimGL](https://3b1b.github.io/manim/getting_started/installation.html)
 
+Note that we require latex to be installed for our presentation.
+
 ### Download source-code for animations
 
 Alternatively, you can install the original manim-slides repository directly, and copy/paste relevant python files for animation.
